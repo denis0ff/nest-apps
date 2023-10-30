@@ -15,4 +15,29 @@ model Meetups {
   title       String
   description String
   date        DateTime
+  place       String
+  ownerId     Int
+  tags        MeetupsWithTags[]
+  members     Members[]
+}
+
+model Tags {
+  id      Int             @id @unique @default(autoincrement())
+  title   String          @unique
+  meetups MeetupsWithTags[]
+}
+
+model MeetupsWithTags {
+  id Int @id @unique @default(autoincrement())
+  meetup   Meetups @relation(fields: [meetupId], references: [id])
+  meetupId Int
+  tag   Tags @relation(fields: [tagId], references: [id])
+  tagId Int
+}
+
+model Members {
+  id Int @id @unique @default(autoincrement())
+  meetup   Meetups @relation(fields: [meetupId], references: [id])
+  meetupId Int
+  userId Int
 }
