@@ -11,10 +11,10 @@ datasource db {
 }
 
 model Meetups {
-  id          Int      @id @unique @default(autoincrement())
+  id          Int               @id @unique @default(autoincrement())
   title       String
   description String
-  date        DateTime
+  date        String
   place       String
   ownerId     Int
   tags        MeetupsWithTags[]
@@ -22,22 +22,22 @@ model Meetups {
 }
 
 model Tags {
-  id      Int             @id @unique @default(autoincrement())
-  title   String          @unique
+  id      Int               @id @unique @default(autoincrement())
+  title   String            @unique
   meetups MeetupsWithTags[]
 }
 
 model MeetupsWithTags {
-  id Int @id @unique @default(autoincrement())
+  id       Int     @id @unique @default(autoincrement())
   meetup   Meetups @relation(fields: [meetupId], references: [id])
   meetupId Int
-  tag   Tags @relation(fields: [tagId], references: [id])
-  tagId Int
+  tag      Tags    @relation(fields: [tagId], references: [id])
+  tagId    Int
 }
 
 model Members {
-  id Int @id @unique @default(autoincrement())
+  id       Int     @id @unique @default(autoincrement())
   meetup   Meetups @relation(fields: [meetupId], references: [id])
   meetupId Int
-  userId Int
+  userId   Int
 }

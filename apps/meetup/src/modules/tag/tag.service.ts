@@ -19,6 +19,11 @@ export class TagService {
     return tag;
   }
 
+  async readByTitle(title: string) {
+    const tag = await this.tagRepository.readByTitle(title);
+    return tag;
+  }
+
   async create(createTagDto: CreateTagDto) {
     const createdTag = await this.tagRepository.create(createTagDto);
 
