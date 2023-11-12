@@ -1,10 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Body,
   Post,
   Put,
   Delete,
@@ -13,8 +13,8 @@ import { TagService } from './tag.service';
 import { JoiValidationPipe } from '@app/common';
 import { CreateTagSchema } from './schemas/create-tag.schema';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagSchema } from './schemas/update-tag.schema';
 import { UpdateTagDto } from './dto/update-tag.dto';
+import { UpdateTagSchema } from './schemas/update-tag.schema';
 
 @Controller('tag')
 export class TagController {

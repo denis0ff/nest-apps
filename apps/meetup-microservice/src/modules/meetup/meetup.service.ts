@@ -34,7 +34,6 @@ export class MeetupService {
 
   async update(id: string, newMeetup: UpdateMeetupDto) {
     const existingMeetup = await this.meetupRepository.readById(id);
-
     if (!existingMeetup) {
       throw new BadRequestException(`The specified meetup does not exist`);
     }

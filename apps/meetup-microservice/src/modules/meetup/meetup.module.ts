@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../../database/database.module';
+import { DatabaseModule } from '../database/database.module';
 import { MeetupRepository } from './meetup.repository';
 import { MeetupService } from './meetup.service';
 import { MeetupController } from './meetup.controller';

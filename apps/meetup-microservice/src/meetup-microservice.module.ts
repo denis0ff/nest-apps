@@ -7,4 +7,4 @@ import { TagModule } from './modules/tag/tag.module';
   controllers: [],
   providers: [],
 })
-export class MeetupBootstrap {}
+export class MeetupMicroservice {}

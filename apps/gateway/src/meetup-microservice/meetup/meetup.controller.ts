@@ -1,16 +1,16 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Body,
   Post,
   Put,
   Delete,
 } from '@nestjs/common';
-import { JoiValidationPipe } from '@app/common';
 import { MeetupService } from './meetup.service';
+import { JoiValidationPipe } from '@app/common';
 import { CreateMeetupSchema } from './schemas/create-meetup.schema';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupSchema } from './schemas/update-meetup.schema';
@@ -31,9 +31,9 @@ export class MeetupController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async readById(@Param('id') id: string) {
-    const meetup = await this.meetupService.readById(id);
+    const tag = await this.meetupService.readById(id);
 
-    return meetup;
+    return tag;
   }
 
   @Post()

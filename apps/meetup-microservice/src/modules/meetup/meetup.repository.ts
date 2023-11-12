@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service';
+import { PrismaService } from '../database/prisma.service';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
 import { MeetupData } from './types';
@@ -37,13 +37,7 @@ export class MeetupRepository {
         },
       },
 
-      include: {
-        tags: {
-          select: {
-            tag: true,
-          },
-        },
-      },
+      include: { tags: { select: { tag: true } } },
     });
 
     return createdMeetup;
@@ -60,19 +54,14 @@ export class MeetupRepository {
         ownerId: 1, // TODO заменить
         tags: {
           deleteMany: { meetupId: Number(id) },
-          create: tags.map((tag) => ({
-            tag: { connect: { id: Number(tag.id) } },
+          create: tags.map(({ id }) => ({
+            tag: { connect: { id: Number(id) } },
           })),
         },
       },
-      include: {
-        tags: {
-          select: {
-            tag: true,
-          },
-        },
-      },
+      include: { tags: { select: { tag: true } } },
     });
+
     return updatedMeetup;
   }
 
