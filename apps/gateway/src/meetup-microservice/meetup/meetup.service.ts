@@ -3,18 +3,18 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
-import { RMQ_MODULES, RMQ_MESSAGES } from '@app/common';
+import { RmqMessages, RMQ_CONFIG } from '@app/common';
 
 @Injectable()
 export class MeetupService {
   constructor(
-    @Inject(RMQ_MODULES.MEETUP)
+    @Inject(RMQ_CONFIG.SERVICE_NAME)
     private readonly client: ClientProxy,
   ) {}
 
   async readAll() {
     const meetups = await firstValueFrom(
-      this.client.send(RMQ_MESSAGES.GET_ALL_MEETUPS, {}),
+      this.client.send(RmqMessages.GET_ALL_MEETUPS, {}),
     );
 
     return meetups;
@@ -22,7 +22,7 @@ export class MeetupService {
 
   async readById(id: string) {
     const meetup = await firstValueFrom(
-      this.client.send(RMQ_MESSAGES.GET_MEETUP_BY_ID, { id }),
+      this.client.send(RmqMessages.GET_MEETUP_BY_ID, { id }),
     );
 
     return meetup;
@@ -30,7 +30,7 @@ export class MeetupService {
 
   async create(createMeetupDto: CreateMeetupDto) {
     const createdMeetup = await firstValueFrom(
-      this.client.send(RMQ_MESSAGES.CREATE_MEETUP, createMeetupDto),
+      this.client.send(RmqMessages.CREATE_MEETUP, createMeetupDto),
     );
 
     return createdMeetup;
@@ -38,7 +38,7 @@ export class MeetupService {
 
   async update(id: string, updateTagDto: UpdateMeetupDto) {
     const updatedTag = await firstValueFrom(
-      this.client.send(RMQ_MESSAGES.UPDATE_MEETUP_BY_ID, {
+      this.client.send(RmqMessages.UPDATE_MEETUP_BY_ID, {
         id,
         updateTagDto,
       }),
@@ -48,6 +48,6 @@ export class MeetupService {
   }
 
   deleteById(id: string) {
-    this.client.emit(RMQ_MESSAGES.DELETE_MEETUP_BY_ID, { id });
+    this.client.emit(RmqMessages.DELETE_MEETUP_BY_ID, { id });
   }
 }

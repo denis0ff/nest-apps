@@ -8,14 +8,16 @@ import {
   Post,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MeetupService } from './meetup.service';
-import { JoiValidationPipe } from '@app/common';
+import { JoiValidationPipe, JwtAuthGuard } from '@app/common';
 import { CreateMeetupSchema } from './schemas/create-meetup.schema';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupSchema } from './schemas/update-meetup.schema';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('meetup')
 export class MeetupController {
   constructor(private readonly meetupService: MeetupService) {}
@@ -61,7 +63,7 @@ export class MeetupController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteById(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: string) {
     await this.meetupService.deleteById(id);
   }
 }

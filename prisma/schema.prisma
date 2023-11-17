@@ -41,3 +41,9 @@ model Members {
   meetupId Int
   userId   Int
 }
+
+model Users {
+  id       Int    @id @unique @default(autoincrement())
+  username String @unique
+  password String
+}

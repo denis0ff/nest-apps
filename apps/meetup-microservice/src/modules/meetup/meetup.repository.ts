@@ -31,8 +31,8 @@ export class MeetupRepository {
         ...meetupData,
         ownerId: 1, // TODO заменить
         tags: {
-          create: tags.map((tag) => ({
-            tag: { connect: { id: Number(tag) } },
+          create: tags.map(({ id }) => ({
+            tag: { connect: { id: Number(id) } },
           })),
         },
       },
@@ -65,7 +65,7 @@ export class MeetupRepository {
     return updatedMeetup;
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: string) {
     await this.prisma.meetups.update({
       where: { id: Number(id) },
       data: {

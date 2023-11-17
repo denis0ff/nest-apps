@@ -19,13 +19,13 @@
         "tsConfigPath": "apps/meetup-microservice/tsconfig.app.json"
       }
     },
-    "authorization": {
+    "auth-microservice": {
       "type": "application",
-      "root": "apps/auth",
+      "root": "apps/auth-microservice",
       "entryFile": "main",
-      "sourceRoot": "apps/auth/src",
+      "sourceRoot": "apps/auth-microservice/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth/tsconfig.app.json"
+        "tsConfigPath": "apps/auth-microservice/tsconfig.app.json"
       }
     },
     "common": {
