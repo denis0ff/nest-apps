@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { MeetupService } from './meetup.service';
 import { MeetupController } from './meetup.controller';
-import { clientRmqOptions } from '@app/common';
+import { clientRmqOptionsMeetup } from '@app/common';
 
 @Module({
-  imports: [ClientsModule.register([clientRmqOptions])],
+  imports: [ClientsModule.register([clientRmqOptionsMeetup])],
   providers: [MeetupService],
   controllers: [MeetupController],
 })

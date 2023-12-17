@@ -7,7 +7,7 @@ import { RmqMessages, RMQ_CONFIG } from '@app/common';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(RMQ_CONFIG.SERVICE_NAME)
+    @Inject(RMQ_CONFIG.SERVICE_AUTH)
     private readonly client: ClientProxy,
   ) {}
 

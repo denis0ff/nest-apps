@@ -6,11 +6,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ClientsModule } from '@nestjs/microservices';
-import { clientRmqOptions, jwtConfig } from '@app/common';
+import { clientRmqOptionsAuth, jwtConfig } from '@app/common';
 
 @Module({
   imports: [
-    ClientsModule.register([clientRmqOptions]),
+    ClientsModule.register([clientRmqOptionsAuth]),
     PassportModule,
     JwtModule.register(jwtConfig),
   ],

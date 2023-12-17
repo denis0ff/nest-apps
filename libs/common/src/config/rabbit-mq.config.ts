@@ -2,8 +2,10 @@ import { RmqOptions, Transport } from '@nestjs/microservices';
 
 export const RMQ_CONFIG = {
   SERVER_URL: process.env.RMQ_MEETUP_URL || 'amqp://localhost:5672',
-  MEETUP_QUEUE: process.env.RMQ_MEETUP_QUEUE || 'MEETUP_QUEUE',
-  SERVICE_NAME: 'GATEWAY',
+  QUEUE_MEETUP: process.env.RMQ_MEETUP_QUEUE || 'QUEUE_MEETUP',
+  QUEUE_AUTH: process.env.RMQ_MEETUP_QUEUE || 'QUEUE_AUTH',
+  SERVICE_MEETUP: 'SERVICE_MEETUP',
+  SERVICE_AUTH: 'SERVICE_AUTH',
 };
 
 export enum RmqMessages {
@@ -32,17 +34,32 @@ export enum RmqMessages {
   DELETE_USER_BY_ID = 'DELETE_USER_BY_ID',
 }
 
-export const rmqOptions: RmqOptions = {
+export const rmqOptionsMeetup: RmqOptions = {
   transport: Transport.RMQ,
   options: {
     urls: [RMQ_CONFIG.SERVER_URL],
-    queue: RMQ_CONFIG.MEETUP_QUEUE,
+    queue: RMQ_CONFIG.QUEUE_MEETUP,
     queueOptions: { durable: false },
     noAck: true,
   },
 };
 
-export const clientRmqOptions = {
-  name: RMQ_CONFIG.SERVICE_NAME,
-  ...rmqOptions,
+export const rmqOptionsAuth: RmqOptions = {
+  transport: Transport.RMQ,
+  options: {
+    urls: [RMQ_CONFIG.SERVER_URL],
+    queue: RMQ_CONFIG.QUEUE_AUTH,
+    queueOptions: { durable: false },
+    noAck: true,
+  },
+};
+
+export const clientRmqOptionsMeetup = {
+  name: RMQ_CONFIG.SERVICE_MEETUP,
+  ...rmqOptionsMeetup,
+};
+
+export const clientRmqOptionsAuth = {
+  name: RMQ_CONFIG.SERVICE_AUTH,
+  ...rmqOptionsAuth,
 };

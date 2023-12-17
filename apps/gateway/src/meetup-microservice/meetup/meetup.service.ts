@@ -8,7 +8,7 @@ import { RmqMessages, RMQ_CONFIG } from '@app/common';
 @Injectable()
 export class MeetupService {
   constructor(
-    @Inject(RMQ_CONFIG.SERVICE_NAME)
+    @Inject(RMQ_CONFIG.SERVICE_MEETUP)
     private readonly client: ClientProxy,
   ) {}
 

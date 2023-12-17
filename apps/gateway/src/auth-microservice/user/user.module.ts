@@ -5,11 +5,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { clientRmqOptions, jwtConfig } from '@app/common';
+import { clientRmqOptionsAuth, jwtConfig } from '@app/common';
 
 @Module({
   imports: [
-    ClientsModule.register([clientRmqOptions]),
+    ClientsModule.register([clientRmqOptionsAuth]),
     PassportModule,
     JwtModule.register(jwtConfig),
   ],

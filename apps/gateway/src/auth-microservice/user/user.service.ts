@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(RMQ_CONFIG.SERVICE_NAME)
+    @Inject(RMQ_CONFIG.SERVICE_AUTH)
     private readonly client: ClientProxy,
   ) {}
 

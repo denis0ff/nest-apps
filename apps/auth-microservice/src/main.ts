@@ -1,12 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthMicroserviceModule } from './auth-microservice.module';
 import { MicroserviceOptions } from '@nestjs/microservices';
-import { rmqOptions } from '@app/common';
+import { rmqOptionsAuth } from '@app/common';
+import { config } from 'dotenv';
+
+config();
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthMicroserviceModule,
-    rmqOptions,
+    rmqOptionsAuth,
   );
   await app.listen();
 }

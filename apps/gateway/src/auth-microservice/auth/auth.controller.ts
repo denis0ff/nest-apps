@@ -5,13 +5,14 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JoiValidationPipe, LocalAuthGuard } from '@app/common';
 import { CreateUserSchema } from './schemas/create-user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -31,10 +32,13 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() req: Request) {
+  public async login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { access_token } = await this.authService.login(req.body);
 
-    req.res.cookie('access_token', access_token, { httpOnly: true });
+    res.cookie('access_token', access_token, { httpOnly: true });
 
     return access_token;
   }
