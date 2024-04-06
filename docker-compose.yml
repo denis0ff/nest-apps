@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   postgres:
+    mem_limit: 512m
     image: postgres:15
     restart: always
     environment:
@@ -11,6 +12,7 @@ services:
     ports:
       - "5432:5432"
   rabbitmq:
+    mem_limit: 512m
     image: rabbitmq:3-management
     ports:
       - "5672:5672" # порт для AMQP
@@ -20,6 +22,53 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+  gateway:
+    mem_limit: 512m
+    build:
+      context: ./
+      dockerfile: ./apps/gateway/Dockerfile
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./apps/gateway/.env
+    depends_on:
+      - auth
+      - meetup
+      - postgres
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev gateway && npx prisma migrate dev
+  auth:
+    mem_limit: 512m
+    build:
+      context: ./
+      dockerfile: ./apps/auth-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - meetup
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev auth-microservice && npx prisma migrate dev
+  meetup:
+    mem_limit: 512m
+    build:
+      context: ./
+      dockerfile: ./apps/meetup-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev meetup-microservice && npx prisma migrate dev
 volumes:
   postgres:
   rabbitmq_data:

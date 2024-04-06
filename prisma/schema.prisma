@@ -12,7 +12,7 @@ datasource db {
 
 model Meetups {
   id          Int               @id @unique @default(autoincrement())
-  title       String
+  title       String            @unique
   description String
   date        String
   place       String
