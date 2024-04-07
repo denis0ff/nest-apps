@@ -1,15 +1,34 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { DatabaseModule } from '../database/database.module';
-import { jwtConfig } from '@app/common';
+import { AuthRepository } from './auth.repository';
+import { JwtTokensService } from './jwt.tokens.service';
+import { PrismaModule } from '@app/common/prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
+import { appConfig, RmqModule } from '@app/common';
+import { UserMicroserviceModule } from '../user/user.module';
+import { AccessJWTStrategy, RefreshJWTStrategy } from './strategies';
 
 @Module({
-  imports: [DatabaseModule, UserModule, JwtModule.register(jwtConfig)],
-  providers: [AuthService],
+  imports: [
+    JwtModule.register({}),
+    PrismaModule,
+    ConfigModule.forRoot({
+      load: [appConfig],
+      isGlobal: true,
+    }),
+    RmqModule,
+    UserMicroserviceModule,
+  ],
   controllers: [AuthController],
-  exports: [AuthService],
+  providers: [
+    AuthService,
+    AuthRepository,
+    JwtTokensService,
+    RefreshJWTStrategy,
+    AccessJWTStrategy,
+  ],
+  exports: [AuthRepository, JwtTokensService],
 })
-export class AuthModule {}
+export class AuthMicroserviceModule {}
