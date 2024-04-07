@@ -35,9 +35,9 @@ services:
       context: ./
       dockerfile: ./apps/gateway/Dockerfile
     ports:
-      - '3000:3000'
+      - '${PORT}:3000'
     env_file:
-      - ./apps/gateway/.env
+      - .env
     depends_on:
       - auth
       - meetup

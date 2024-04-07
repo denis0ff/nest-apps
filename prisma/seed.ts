@@ -1,11 +1,11 @@
+import { bcryptSalt } from '@app/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function hashData(password: string) {
-  const saltOrRounds = 10;
-  return await bcrypt.hash(password, saltOrRounds);
+  return await bcrypt.hash(password, bcryptSalt);
 }
 
 const userData: Prisma.UsersCreateInput[] = [
