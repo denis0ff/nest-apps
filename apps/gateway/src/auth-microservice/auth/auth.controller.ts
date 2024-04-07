@@ -9,10 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JoiValidationPipe, LocalAuthGuard } from '@app/common';
+import { JoiValidationPipe } from '@app/common';
 import { CreateUserSchema } from './schemas/create-user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Request, Response } from 'express';
+import { LocalAuthGuard } from '../../guards/local.guard';
 
 @Controller('auth')
 export class AuthController {

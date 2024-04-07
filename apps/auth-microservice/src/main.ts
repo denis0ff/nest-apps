@@ -11,6 +11,6 @@ async function bootstrap() {
     AuthMicroserviceModule,
     rmqOptionsAuth,
   );
-  await app.listen();
+  await app.init();
 }
 bootstrap();

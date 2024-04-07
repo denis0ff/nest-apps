@@ -12,6 +12,6 @@ async function bootstrap() {
     rmqOptionsMeetup,
   );
 
-  await app.listen();
+  await app.init()
 }
 bootstrap();

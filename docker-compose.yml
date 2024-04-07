@@ -1,17 +1,21 @@
 version: "3.8"
 services:
   postgres:
+    networks:
+      - meetup_network
     mem_limit: 512m
     image: postgres:15
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    env_file:
+      - .env
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   rabbitmq:
+    networks:
+      - meetup_network
     mem_limit: 512m
     image: rabbitmq:3-management
     ports:
@@ -22,7 +26,10 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+
   gateway:
+    networks:
+      - meetup_network
     mem_limit: 512m
     build:
       context: ./
@@ -40,7 +47,10 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: npm run start:dev gateway && npx prisma migrate dev
+
   auth:
+    networks:
+      - meetup_network
     mem_limit: 512m
     build:
       context: ./
@@ -55,7 +65,10 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: npm run start:dev auth-microservice && npx prisma migrate dev
+
   meetup:
+    networks:
+      - meetup_network
     mem_limit: 512m
     build:
       context: ./
@@ -69,6 +82,10 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: npm run start:dev meetup-microservice && npx prisma migrate dev
+
 volumes:
   postgres:
   rabbitmq_data:
+
+networks:
+  meetup_network:

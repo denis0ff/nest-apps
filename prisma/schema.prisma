@@ -43,7 +43,14 @@ model Members {
 }
 
 model Users {
-  id       Int    @id @unique @default(autoincrement())
-  username String @unique
+  id       Int      @id @unique @default(autoincrement())
+  username String   @unique
   password String
+  role     UserRole @default(USER)
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  ORGANIZER
 }

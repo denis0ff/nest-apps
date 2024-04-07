@@ -11,11 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { MeetupService } from './meetup.service';
-import { JoiValidationPipe, JwtAuthGuard } from '@app/common';
+import { JoiValidationPipe } from '@app/common';
 import { CreateMeetupSchema } from './schemas/create-meetup.schema';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupSchema } from './schemas/update-meetup.schema';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
+import { JwtAuthGuard } from '../../guards/jwt.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('meetup')
