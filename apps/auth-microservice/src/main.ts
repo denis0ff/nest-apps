@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthMicroserviceModule } from './auth/auth.module';
+import { AuthMicroserviceModule } from './modules/auth/auth.module';
 import { RmqService } from '@app/common';
 
 async function bootstrap() {
