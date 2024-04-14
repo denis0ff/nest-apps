@@ -1,47 +1,58 @@
 import { Controller } from '@nestjs/common';
 import { MeetupService } from './meetup.service';
-import { CreateMeetupDto } from './dto/create-meetup.dto';
-import { UpdateMeetupDto } from './dto/update-meetup.dto';
+import { CreateMeetupDto, GetMeetupDto, UpdateMeetupDto } from './dto';
+import { MeetupResponse } from './response';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { RmqMessages } from '@app/common';
+import { GetMeetupByGeoDto } from './dto/get-meetup-by-geo.dto';
 
 @Controller()
 export class MeetupController {
   constructor(private readonly meetupService: MeetupService) {}
 
   @MessagePattern(RmqMessages.GET_ALL_MEETUPS)
-  async readAll() {
-    const meetups = await this.meetupService.readAll();
+  public async getAllMeetups(
+    @Payload('dto') dto: GetMeetupDto,
+  ): Promise<MeetupResponse[] | string> {
+    return this.meetupService.getAllMeetups(dto);
+  }
 
-    return meetups;
+  @MessagePattern(RmqMessages.GET_MEETUP_BY_GEO)
+  public async getMeetupByGeo(
+    @Payload('dto') dto: GetMeetupByGeoDto,
+  ): Promise<MeetupResponse[] | string> {
+    return this.meetupService.getMeetupByGeo(dto);
   }
 
   @MessagePattern(RmqMessages.GET_MEETUP_BY_ID)
-  async readById(@Payload('id') id: string) {
-    const meetup = await this.meetupService.readById(id);
-
-    return meetup;
+  public async getMeetupById(
+    @Payload('id') id: number,
+  ): Promise<MeetupResponse | string> {
+    return this.meetupService.getMeetupById(id);
   }
 
   @MessagePattern(RmqMessages.CREATE_MEETUP)
-  async create(@Payload() createMeetupDto: CreateMeetupDto) {
-    const createdMeetup = await this.meetupService.create(createMeetupDto);
-
-    return createdMeetup;
+  public async createAMeetup(
+    @Payload('userId') userId: number,
+    @Payload('dto') dto: CreateMeetupDto,
+  ): Promise<MeetupResponse | string> {
+    return this.meetupService.createAMeetup(userId, dto);
   }
 
-  @MessagePattern(RmqMessages.UPDATE_MEETUP_BY_ID)
-  async update(
-    @Payload('id') id: string,
-    @Payload('updateMeetupDto') updateMeetupDto: UpdateMeetupDto,
-  ) {
-    const updatedMeetup = await this.meetupService.update(id, updateMeetupDto);
-
-    return updatedMeetup;
+  @EventPattern(RmqMessages.UPDATE_MEETUP_BY_ID)
+  public async changeInfoInMeetup(
+    @Payload('userId') userId: number,
+    @Payload('id') id: number,
+    @Payload('dto') dto: UpdateMeetupDto,
+  ): Promise<MeetupResponse | string> {
+    return this.meetupService.changeInfoInMeetup(userId, id, dto);
   }
 
   @EventPattern(RmqMessages.DELETE_MEETUP_BY_ID)
-  async deleteById(@Payload('id') id: string) {
-    await this.meetupService.deleteById(id);
+  public async deleteMeetupById(
+    @Payload('userId') userId: number,
+    @Payload('id') id: number,
+  ): Promise<MeetupResponse | string> {
+    return this.meetupService.deleteMeetupById(userId, id);
   }
 }

@@ -1,17 +1,15 @@
-import { rmqOptionsMeetup } from '@app/common';
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions } from '@nestjs/microservices';
-import { config } from 'dotenv';
-import { MeetupMicroservice } from './meetup-microservice.module';
-
-config();
+import { MeetupModule } from './modules/meetup/meetup.module';
+import { RmqService } from '@app/common';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    MeetupMicroservice,
-    rmqOptionsMeetup,
-  );
+  const app = await NestFactory.create(MeetupModule);
 
-  await app.init()
+  const rmqService = app.get<RmqService>(RmqService);
+
+  app.connectMicroservice(rmqService.getOptions('MEETUP', true));
+
+  await app.startAllMicroservices();
 }
+
 bootstrap();

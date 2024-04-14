@@ -1,4 +1,4 @@
-import { MeetupResponse } from '../meetups/response';
+import { MeetupResponse } from '../meetup/response';
 
 export interface MeetupSearchPayload {
   hits: {

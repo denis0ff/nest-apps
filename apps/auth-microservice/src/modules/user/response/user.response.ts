@@ -5,7 +5,7 @@ export class UserResponse {
   username: string;
   password: string;
   role: string;
-  hashRt: string;
-  followedMeetups: MeetupResponse[];
-  createdMeetups: MeetupResponse[];
+  hashedRefreshToken: string;
+  followedMeetups?: MeetupResponse[];
+  createdMeetups?: MeetupResponse[];
 }

@@ -14,27 +14,15 @@ model Meetups {
   id              Int               @id @unique @default(autoincrement())
   title           String            @unique
   description     String
-  date            String
+  date            DateTime
   place           String
   ownerId         Int
-  tags            MeetupsWithTags[]
+  tags            String[]
   members         Members[]
   meetupOrganizer Users?            @relation("MeetupOrganizer", fields: [ownerId], references: [id])
   meetupFollowers Users[]           @relation("MeetupFollower")
-}
-
-model Tags {
-  id      Int               @id @unique @default(autoincrement())
-  title   String            @unique
-  meetups MeetupsWithTags[]
-}
-
-model MeetupsWithTags {
-  id       Int     @id @unique @default(autoincrement())
-  meetup   Meetups @relation(fields: [meetupId], references: [id])
-  meetupId Int
-  tag      Tags    @relation(fields: [tagId], references: [id])
-  tagId    Int
+  lat             Float
+  long            Float
 }
 
 model Members {

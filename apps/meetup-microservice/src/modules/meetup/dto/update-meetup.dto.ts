@@ -1,7 +1,3 @@
-export class UpdateMeetupDto {
-  title?: string;
-  description?: string;
-  date?: string;
-  place?: string;
-  tags?: string[];
-}
+import { CreateMeetupDto } from './create-meetup.dto';
+
+export class UpdateMeetupDto extends CreateMeetupDto {}

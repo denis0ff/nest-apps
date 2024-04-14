@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { MeetupResponse } from '../meetups/response';
+import { MeetupResponse } from '../meetup/response';
 import { MeetupSearchPayload } from './types';
 
 @Injectable()
