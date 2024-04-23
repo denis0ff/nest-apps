@@ -1,9 +1,9 @@
-version: "3.8"
 services:
   postgres:
     networks:
       - meetup_network
-    mem_limit: 512m
+    mem_limit: 256m
+    cpus: 0.05
     image: postgres:15
     restart: always
     env_file:
@@ -13,10 +13,33 @@ services:
     ports:
       - "5432:5432"
 
+  elasticsearch:
+    mem_limit: 512m
+    image: elasticsearch:7.17.9
+    container_name: elasticsearch
+    networks:
+      - meetup_network
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ELASTICSEARCH_USERNAME=${ES_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ES_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+
   rabbitmq:
     networks:
       - meetup_network
-    mem_limit: 512m
+    mem_limit: 256m
+    cpus: 0.05
     image: rabbitmq:3-management
     ports:
       - "5672:5672" # порт для AMQP
@@ -30,7 +53,8 @@ services:
   gateway:
     networks:
       - meetup_network
-    mem_limit: 512m
+    mem_limit: 256m
+    cpus: 0.1
     build:
       context: ./
       dockerfile: ./apps/gateway/Dockerfile
@@ -51,7 +75,8 @@ services:
   auth:
     networks:
       - meetup_network
-    mem_limit: 512m
+    mem_limit: 256m
+    cpus: 0.05
     build:
       context: ./
       dockerfile: ./apps/auth-microservice/Dockerfile
@@ -69,7 +94,8 @@ services:
   meetup:
     networks:
       - meetup_network
-    mem_limit: 512m
+    mem_limit: 256m
+    cpus: 0.05
     build:
       context: ./
       dockerfile: ./apps/meetup-microservice/Dockerfile
@@ -86,6 +112,8 @@ services:
 volumes:
   postgres:
   rabbitmq_data:
+  es_data:
+
 
 networks:
   meetup_network:

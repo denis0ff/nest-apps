@@ -30,8 +30,8 @@ export class ReportService {
   private async getMeetupList() {
     const meetups = await this.meetupsRepository.getAllMeetupsReport();
 
-    return meetups.map(({ name, description, lat, long, place, tags }) => [
-      `${name}, ${name}, ${description}, ${place}, ${long}, ${lat}, ${tags.join(
+    return meetups.map(({ title, description, lat, long, place, tags }) => [
+      `${title}, ${title}, ${description}, ${place}, ${long}, ${lat}, ${tags.join(
         ', ',
       )}`,
     ]);

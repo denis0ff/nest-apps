@@ -11,10 +11,10 @@ import { HttpConnection } from '@elastic/elasticsearch';
     ElasticsearchModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        node: configService.get('ELASTICSEARCH_NODE'),
+        node: configService.get('ES_NODE'),
         auth: {
-          username: configService.get('ELASTICSEARCH_USERNAME'),
-          password: configService.get('ELASTICSEARCH_PASSWORD'),
+          username: configService.get('ES_USERNAME'),
+          password: configService.get('ES_PASSWORD'),
         },
         Connection: HttpConnection,
       }),

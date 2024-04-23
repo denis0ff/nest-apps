@@ -1,7 +1,7 @@
 import * as process from 'process';
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
-import { Payload } from '../types';
+import { GooglePayload } from '../types';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
@@ -22,7 +22,7 @@ export class RefreshJWTStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
     return null;
   }
 
-  validate(req: Request, payload: Payload) {
+  validate(req: Request, payload: GooglePayload) {
     const refreshToken = req.cookies.refreshToken;
     return { ...payload, refreshToken };
   }
