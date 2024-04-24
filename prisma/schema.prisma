@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Meetups {
+model Meetup {
   id              Int               @id @unique @default(autoincrement())
   title           String            @unique
   description     String
@@ -27,7 +27,7 @@ model Meetups {
 
 model Members {
   id       Int     @id @unique @default(autoincrement())
-  meetup   Meetups @relation(fields: [meetupId], references: [id])
+  meetup   Meetup @relation(fields: [meetupId], references: [id])
   meetupId Int
   userId   Int
 }
@@ -38,8 +38,8 @@ model Users {
   password           String
   role               UserRole  @default(USER)
   hashedRefreshToken String?
-  createdMeetups     Meetups[] @relation("MeetupOrganizer")
-  followedMeetups    Meetups[] @relation("MeetupFollower")
+  createdMeetups     Meetup[] @relation("MeetupOrganizer")
+  followedMeetups    Meetup[] @relation("MeetupFollower")
 }
 
 enum UserRole {

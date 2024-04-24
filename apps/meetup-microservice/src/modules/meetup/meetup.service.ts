@@ -4,6 +4,7 @@ import { MeetupResponse } from './response';
 import { MeetupRepository } from './meetup.repository';
 import { ElasticMicroserviceService } from '../elastic/elastic.service';
 import { GetMeetupByGeoDto } from './dto/get-meetup-by-geo.dto';
+import { ElasticDto } from '../elastic/dto';
 
 @Injectable()
 export class MeetupService {
@@ -12,13 +13,13 @@ export class MeetupService {
     private readonly elasticSearch: ElasticMicroserviceService,
   ) {}
 
-  public async createAMeetup(
+  public async createMeetup(
     userId: number,
     dto: CreateMeetupDto,
   ): Promise<MeetupResponse | string> {
-    await this.getUserRole(userId);
+    await this.checkAdminRole(userId);
 
-    const result = await this.repository.createAMeetup(userId, dto);
+    const result = await this.repository.createMeetup(userId, dto);
 
     await this.elasticSearch.indexMeetups(result);
 
@@ -45,29 +46,29 @@ export class MeetupService {
     return result;
   }
 
-  public async deleteMeetupById(
+  public async deleteMeetup(
     userId: number,
     id: number,
   ): Promise<MeetupResponse | string> {
-    await this.getUserRole(userId);
+    await this.checkAdminRole(userId);
     await this.findMeetupById(+id);
-    await this.compareUserIdAndMeetupId(userId, id);
+    await this.checkOwner(userId, id);
 
-    const result = await this.repository.deleteMeetupById(id);
+    const result = await this.repository.deleteMeetup(id);
 
     return result;
   }
 
-  public async changeInfoInMeetup(
+  public async updateMeetup(
     userId: number,
     id: number,
     dto: UpdateMeetupDto,
   ): Promise<MeetupResponse | string> {
-    await this.getUserRole(userId);
-    await this.compareUserIdAndMeetupId(userId, id);
+    await this.checkAdminRole(userId);
+    await this.checkOwner(userId, id);
     await this.findMeetupById(id);
 
-    const result = await this.repository.changeInfoInMeetup(id, dto);
+    const result = await this.repository.updateMeetup(id, dto);
 
     return result;
   }
@@ -82,32 +83,18 @@ export class MeetupService {
     return meetup;
   }
 
-  public async searchForPosts(text: string) {
-    const results = await this.elasticSearch.searchMeetups(text);
-    const idList = results.map((result) => result);
+  public async checkAdminRole(userId: number): Promise<void> {
+    const { role } = await this.repository.getUserRole(userId);
 
-    if (!idList.length) {
-      return [];
-    }
-
-    return this.repository.getMeetupById(idList);
-  }
-
-  public async getUserRole(userId: number): Promise<void> {
-    const userRole = await this.repository.getUserRole(userId);
-
-    if (userRole.role != 'ADMIN') {
+    if (role != 'ADMIN') {
       throw new HttpException('Access denied', 403);
     }
   }
 
-  public async compareUserIdAndMeetupId(
-    userId: number,
-    id: number,
-  ): Promise<void> {
-    const meetupOwner = await this.repository.getMeetupOwnerId(id);
+  public async checkOwner(userId: number, id: number): Promise<void> {
+    const { ownerId } = await this.repository.getMeetupOwnerId(id);
 
-    if (userId != meetupOwner.ownerId) {
+    if (userId != ownerId) {
       throw new HttpException('Access denied!', 403);
     }
   }

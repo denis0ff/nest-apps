@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/common/prisma/prisma.service';
-import { Meetups } from '@prisma/client';
+import { MeetupResponse } from 'apps/meetup-microservice/src/modules/meetup/response';
 
 @Injectable()
 export class UserRepository {
@@ -16,7 +16,7 @@ export class UserRepository {
   public async subscribeToMeetup(
     userId: number,
     meetupId: number,
-  ): Promise<Meetups> {
+  ): Promise<MeetupResponse> {
     try {
       await this.prisma.users.update({
         where: { id: userId },
@@ -25,7 +25,7 @@ export class UserRepository {
         },
       });
 
-      return this.prisma.meetups.findUnique({ where: { id: meetupId } });
+      return this.prisma.meetup.findUnique({ where: { id: meetupId } });
     } catch {
       throw new BadRequestException('Invalid input data');
     }

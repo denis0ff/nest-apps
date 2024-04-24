@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MeetupResponse } from '../meetup/response';
+import { ElasticDto } from './dto';
 import { MeetupSearchPayload } from './types';
 
 @Injectable()
 export class ElasticMicroserviceService {
-  index = 'meetups';
+  index = 'meetup';
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   public async indexMeetups(meetup: MeetupResponse) {
@@ -15,7 +16,7 @@ export class ElasticMicroserviceService {
     });
   }
 
-  public async searchMeetups(query: string) {
+  public async searchMeetups({ searchString }: ElasticDto) {
     const {
       hits: { hits },
     } = await this.elasticsearchService.search<MeetupSearchPayload>({
@@ -23,7 +24,7 @@ export class ElasticMicroserviceService {
       body: {
         query: {
           match: {
-            name: query,
+            name: searchString,
           },
         },
       },

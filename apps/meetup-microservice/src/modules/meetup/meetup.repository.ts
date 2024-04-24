@@ -12,15 +12,15 @@ export class MeetupRepository {
 
   // TO DO исправить типизацию
   public async getMeetupById(id: any): Promise<MeetupResponse> {
-    return this.prisma.meetups.findUnique({ where: { id: id } });
+    return this.prisma.meetup.findUnique({ where: { id: id } });
   }
 
   public async getAllMeetupsReport(): Promise<MeetupResponse[]> {
-    return this.prisma.meetups.findMany();
+    return this.prisma.meetup.findMany();
   }
 
   public async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
-    const where: Prisma.MeetupsWhereInput = {
+    const where: Prisma.MeetupWhereInput = {
       title: { contains: dto?.title },
       date: {
         gte: dto.from ? new Date(dto.from) : undefined,
@@ -28,22 +28,22 @@ export class MeetupRepository {
       },
     };
 
-    const query: Prisma.MeetupsFindManyArgs = {
+    const query: Prisma.MeetupFindManyArgs = {
       where,
       orderBy: {
         date: dto.sort,
       },
       take: dto?.limit || 1,
-      skip: (dto?.page - 1) * dto?.limit,
+      skip: (dto?.page - 1) * dto?.limit || undefined,
     };
 
-    return this.prisma.meetups.findMany(query);
+    return this.prisma.meetup.findMany(query);
   }
 
   public async getMeetupByGeo(
     dto: GetMeetupByGeoDto,
   ): Promise<MeetupResponse[]> {
-    const meetups = await this.prisma.meetups.findMany({
+    const meetups = await this.prisma.meetup.findMany({
       where: {
         AND: {
           long: {
@@ -61,24 +61,24 @@ export class MeetupRepository {
     return meetups;
   }
 
-  public async createAMeetup(
+  public async createMeetup(
     userId: number,
     dto: CreateMeetupDto,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetups.create({
+    return this.prisma.meetup.create({
       data: { ...dto, ownerId: userId },
     });
   }
 
-  public async deleteMeetupById(id: number): Promise<MeetupResponse> {
-    return this.prisma.meetups.delete({ where: { id: id } });
+  public async deleteMeetup(id: number): Promise<MeetupResponse> {
+    return this.prisma.meetup.delete({ where: { id: id } });
   }
 
-  public async changeInfoInMeetup(
+  public async updateMeetup(
     id: number,
     dto: UpdateMeetupDto,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetups.update({ where: { id: id }, data: dto });
+    return this.prisma.meetup.update({ where: { id: id }, data: dto });
   }
 
   public async getUserRole(userId: number): Promise<UserResponse> {
@@ -88,7 +88,7 @@ export class MeetupRepository {
   }
 
   public async getMeetupOwnerId(ownerId: number): Promise<MeetupResponse> {
-    return this.prisma.meetups.findUnique({
+    return this.prisma.meetup.findUnique({
       where: { id: ownerId },
     });
   }

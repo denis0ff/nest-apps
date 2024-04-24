@@ -9,8 +9,8 @@ import { ReportMicroserviceModule } from '../report/report.module';
 import { ElasticMicroserviceModule } from '../elastic/elastic.module';
 import { ElasticMicroserviceService } from '../elastic/elastic.service';
 import { UserMicroserviceModule } from 'apps/auth-microservice/src/modules/user/user.module';
-import { AuthMicroserviceModule } from 'apps/gateway/src/auth-microservice/auth-microservice.module';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
+import { AuthMicroserviceModule } from 'apps/auth-microservice/src/modules/auth/auth.module';
 
 @Module({
   imports: [

@@ -32,27 +32,27 @@ export class MeetupController {
   }
 
   @MessagePattern(RmqMessages.CREATE_MEETUP)
-  public async createAMeetup(
+  public async createMeetup(
     @Payload('userId') userId: number,
     @Payload('dto') dto: CreateMeetupDto,
   ): Promise<MeetupResponse | string> {
-    return this.meetupService.createAMeetup(userId, dto);
+    return this.meetupService.createMeetup(userId, dto);
   }
 
   @EventPattern(RmqMessages.UPDATE_MEETUP_BY_ID)
-  public async changeInfoInMeetup(
+  public async updateMeetup(
     @Payload('userId') userId: number,
     @Payload('id') id: number,
     @Payload('dto') dto: UpdateMeetupDto,
   ): Promise<MeetupResponse | string> {
-    return this.meetupService.changeInfoInMeetup(userId, id, dto);
+    return this.meetupService.updateMeetup(userId, id, dto);
   }
 
   @EventPattern(RmqMessages.DELETE_MEETUP_BY_ID)
-  public async deleteMeetupById(
+  public async deleteMeetup(
     @Payload('userId') userId: number,
     @Payload('id') id: number,
   ): Promise<MeetupResponse | string> {
-    return this.meetupService.deleteMeetupById(userId, id);
+    return this.meetupService.deleteMeetup(userId, id);
   }
 }

@@ -1,15 +1,5 @@
-import { RmqOptions, Transport } from '@nestjs/microservices';
-
-export const RMQ_CONFIG = {
-  SERVER_URL: process.env.RMQ_MEETUP_URL || 'amqp://localhost:5672',
-  QUEUE_MEETUP: process.env.RMQ_MEETUP_QUEUE || 'QUEUE_MEETUP',
-  QUEUE_AUTH: process.env.RMQ_MEETUP_QUEUE || 'QUEUE_AUTH',
-  SERVICE_MEETUP: 'SERVICE_MEETUP',
-  SERVICE_AUTH: 'SERVICE_AUTH',
-};
-
 export enum RmqMessages {
-  // MEETUPS MESSAGES
+  // MEETUP MESSAGES
   GET_ALL_MEETUPS = 'GET_ALL_MEETUPS',
   GET_MEETUP_BY_ID = 'GET_MEETUP_BY_ID',
   CREATE_MEETUP = 'CREATE_MEETUP',
@@ -19,7 +9,7 @@ export enum RmqMessages {
   ELASTIC_SEARCH = 'ELASTIC_SEARCH',
   GET_MEETUP_BY_GEO = 'GET_MEETUP_BY_GEO',
 
-  // TAGS MESSAGES
+  // TAG MESSAGES
   GET_ALL_TAGS = 'GET_ALL_TAGS',
   GET_TAG_BY_ID = 'GET_TAG_BY_ID',
   CREATE_TAG = 'CREATE_TAG',
@@ -38,37 +28,7 @@ export enum RmqMessages {
   GET_USER_BY_ID = 'GET_USER_BY_ID',
   DELETE_USER_BY_ID = 'DELETE_USER_BY_ID',
 
-  // REPORTS_MESSAGES
+  // REPORT_MESSAGES
   REPORT_CSV = 'REPORT_CSV',
   REPORT_PDF = 'REPORT_PDF',
 }
-
-export const rmqOptionsMeetup: RmqOptions = {
-  transport: Transport.RMQ,
-  options: {
-    urls: [RMQ_CONFIG.SERVER_URL],
-    queue: RMQ_CONFIG.QUEUE_MEETUP,
-    queueOptions: { durable: false },
-    noAck: true,
-  },
-};
-
-export const rmqOptionsAuth: RmqOptions = {
-  transport: Transport.RMQ,
-  options: {
-    urls: [RMQ_CONFIG.SERVER_URL],
-    queue: RMQ_CONFIG.QUEUE_AUTH,
-    queueOptions: { durable: false },
-    noAck: true,
-  },
-};
-
-export const clientRmqOptionsMeetup = {
-  name: RMQ_CONFIG.SERVICE_MEETUP,
-  ...rmqOptionsMeetup,
-};
-
-export const clientRmqOptionsAuth = {
-  name: RMQ_CONFIG.SERVICE_AUTH,
-  ...rmqOptionsAuth,
-};
