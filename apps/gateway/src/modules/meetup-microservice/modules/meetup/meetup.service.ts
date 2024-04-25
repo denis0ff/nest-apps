@@ -67,16 +67,4 @@ export class MeetupService {
       }),
     );
   }
-
-  public async reportCSV() {
-    return await lastValueFrom(
-      this.meetupClient.send(RmqMessages.REPORT_CSV, {}),
-    );
-  }
-
-  public async reportPDF() {
-    return await lastValueFrom(
-      this.meetupClient.send(RmqMessages.REPORT_PDF, {}),
-    );
-  }
 }

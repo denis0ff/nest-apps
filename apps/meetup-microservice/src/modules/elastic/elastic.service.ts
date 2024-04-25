@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MeetupResponse } from '../meetup/response';
 import { ElasticDto } from './dto';
-import { MeetupSearchPayload } from './types';
+import { MeetupSearchPayload, MeetupSearchResult } from './types';
 
 @Injectable()
 export class ElasticMicroserviceService {
@@ -17,19 +17,21 @@ export class ElasticMicroserviceService {
   }
 
   public async searchMeetups({ searchString }: ElasticDto) {
-    const {
-      hits: { hits },
-    } = await this.elasticsearchService.search<MeetupSearchPayload>({
+    const data = await this.elasticsearchService.search<MeetupSearchPayload, MeetupSearchResult>({
       index: this.index,
       body: {
         query: {
-          match: {
-            name: searchString,
+          multi_match: {
+            query: searchString,
+            fuzziness: 'auto',
           },
         },
       },
     });
 
-    return hits.map((item) => item._source);
+    return {
+        total: data.hits.hits.length,
+        hits: data.hits.hits.map(({ _source }) => (_source)),
+    };
   }
 }

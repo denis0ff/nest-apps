@@ -33,7 +33,7 @@ export class MeetupRepository {
       orderBy: {
         date: dto.sort,
       },
-      take: dto?.limit || 1,
+      take: dto?.limit || 10,
       skip: (dto?.page - 1) * dto?.limit || undefined,
     };
 

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
@@ -6,5 +7,6 @@ import {
 export class ElasticDto {
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({ description: 'Meetup elastic search', nullable: false })
   searchString: string;
 }

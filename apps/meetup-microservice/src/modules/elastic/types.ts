@@ -8,3 +8,10 @@ export interface MeetupSearchPayload {
     }>;
   };
 }
+
+export interface MeetupSearchResult {
+  hits: {
+    total: number;
+    hits: Array<{ _source: MeetupSearchPayload }>;
+  };
+}

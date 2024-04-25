@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional } from 'class-validator';
 
 export class GetMeetupDto {
   @IsOptional()
@@ -21,12 +21,4 @@ export class GetMeetupDto {
 
   @IsOptional()
   page?: number;
-
-  @IsNumber()
-  @IsOptional()
-  long?: number;
-
-  @IsNumber()
-  @IsOptional()
-  lat?: number;
 }

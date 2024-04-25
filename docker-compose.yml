@@ -70,7 +70,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start:dev gateway && npx prisma migrate dev
+    command: npm run start:dev gateway && npx prisma migrate dev && npx prisma db seed
 
   auth:
     networks:

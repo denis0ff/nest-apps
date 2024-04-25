@@ -18,6 +18,8 @@ import { RefreshJWTGuard } from './guards';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtTokensService } from 'apps/auth-microservice/src/modules/auth/jwt.tokens.service';
+import { ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { BadRequestDto, UnauthorizedDto, UnauthorizedError } from '@app/common/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,16 @@ export class AuthController {
   @Public()
   @Post('register')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Register new user' })
+  @ApiResponse({ status: 204, description: 'Success' })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+    type: BadRequestDto,
+    schema: {
+      $ref: getSchemaPath(BadRequestDto),
+    },
+  })
   public async register(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
@@ -44,6 +56,23 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Login user' })
+  @ApiResponse({ status: 204, description: 'Success' })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+    schema: {
+      $ref: getSchemaPath(BadRequestDto),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+    type: UnauthorizedDto,
+    schema: {
+      $ref: getSchemaPath(UnauthorizedDto),
+    },
+  })
   public async login(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
@@ -64,6 +93,16 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+    type: UnauthorizedError,
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
+  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   public async logout(
     @GetUserId() userId: number,
     @Res({ passthrough: true }) res: Response,
@@ -78,6 +117,15 @@ export class AuthController {
   @UseGuards(RefreshJWTGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Refresh JWT token' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
+  })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
   public async refreshTokens(
     @GetUserId() userId: number,
     @GetUser('refreshToken') refreshToken: string,
