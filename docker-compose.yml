@@ -75,8 +75,8 @@ services:
   auth:
     networks:
       - meetup_network
-    mem_limit: 256m
-    cpus: 0.05
+    mem_limit: 512m
+    cpus: 0.1
     build:
       context: ./
       dockerfile: ./apps/auth-microservice/Dockerfile

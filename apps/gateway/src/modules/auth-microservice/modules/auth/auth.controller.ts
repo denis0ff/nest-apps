@@ -18,9 +18,10 @@ import { RefreshJWTGuard } from './guards';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtTokensService } from 'apps/auth-microservice/src/modules/auth/jwt.tokens.service';
-import { ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { BadRequestDto, UnauthorizedDto, UnauthorizedError } from '@app/common/swagger';
 
+@ApiTags('Auth API')
 @Controller('auth')
 export class AuthController {
   constructor(

@@ -21,9 +21,12 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 
+
+@ApiTags('Meetup API')
 @Controller('meetup')
 export class MeetupController {
   constructor(private readonly meetupsService: MeetupService) {}

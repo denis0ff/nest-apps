@@ -11,12 +11,14 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { GetUserId } from '../auth/decorators';
 import { MeetupResponse, UserResponse } from './response';
 import { UserService } from './user.service';
 
+@ApiTags('User API')
 @Controller('users')
 export class UserController {
   constructor(private readonly usersService: UserService) {}
