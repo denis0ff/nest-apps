@@ -1,9 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import { MeetupModule } from './modules/meetup/meetup.module';
-import { RmqService } from '@app/common';
+import { MeetupMicroserviceModule } from './modules/meetup/meetup.module';
+import { instance, RmqService } from '@app/common';
+import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
-  const app = await NestFactory.create(MeetupModule);
+  const logger = WinstonModule.createLogger({
+    instance: instance,
+  });
+
+  const app = await NestFactory.create(MeetupMicroserviceModule);
+
+  app.useLogger(logger);
 
   const rmqService = app.get<RmqService>(RmqService);
 

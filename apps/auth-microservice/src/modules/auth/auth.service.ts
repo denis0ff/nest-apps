@@ -1,6 +1,9 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,27 +20,48 @@ export class AuthService {
     private readonly repository: AuthRepository,
     private readonly jwtTokenService: JwtTokensService,
     private readonly prisma: PrismaService,
+    private readonly logger: Logger,
   ) {}
 
+  SERVICE: string = AuthService.name;
+
   public async register(dto: AuthDto) {
-    const findUser = await this.repository.findUser(dto);
+    try {
+      const findUser = await this.repository.findUser(dto);
 
-    if (findUser) {
-      throw new BadRequestException('User with such login is already exist');
+      if (findUser) {
+        throw new BadRequestException('User with such login is already exist');
+      }
+
+      const hashedPassword = await this.hashData(dto.password);
+
+      const newUser = await this.repository.createNewUser(dto, hashedPassword);
+
+      const tokens = await this.jwtTokenService.signTokens(
+        newUser.id,
+        newUser.username,
+      );
+
+      await this.jwtTokenService.updateRefreshTokenHash(
+        newUser.id,
+        tokens.refreshToken,
+      );
+
+      this.logger.log(
+        `User successfully registered - ${newUser.id}`,
+        this.SERVICE,
+      );
+
+      return tokens;
+    } catch (e: any) {
+      this.logger.error('Unable to register user', e, this.SERVICE);
+
+      if (e instanceof HttpException) {
+        return e;
+      }
+
+      return new HttpException(`${e.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    const hashedPassword = await this.hashData(dto.password);
-
-    const newUser = await this.repository.createNewUser(dto, hashedPassword);
-
-    const tokens = await this.jwtTokenService.signTokens(
-      newUser.id,
-      newUser.username,
-    );
-
-    await this.jwtTokenService.updateRefreshTokenHash(newUser.id, tokens.refreshToken);
-
-    return tokens;
   }
 
   public async login(dto: AuthDto) {
@@ -58,28 +82,44 @@ export class AuthService {
       user.username,
     );
 
-    await this.jwtTokenService.updateRefreshTokenHash(user.id, tokens.refreshToken);
+    await this.jwtTokenService.updateRefreshTokenHash(
+      user.id,
+      tokens.refreshToken,
+    );
 
     return tokens;
   }
 
   public async validateUser(username: string) {
-    const user = await this.repository.findGoogleUser(username);
+    try {
+      const user = await this.repository.findGoogleUser(username);
 
-    if (!user) {
-      await this.prisma.users.create({
-        data: { username, password: '' },
-      });
+      if (!user) {
+        await this.prisma.user.create({
+          data: { username, password: '' },
+        });
+      }
+
+      const tokens = await this.jwtTokenService.signTokens(
+        user.id,
+        user.username,
+      );
+
+      await this.jwtTokenService.updateRefreshTokenHash(
+        user.id,
+        tokens.refreshToken,
+      );
+
+      return tokens;
+    } catch (e: any) {
+      this.logger.error('Unable to login user', e, this.SERVICE);
+
+      if (e instanceof HttpException) {
+        return e;
+      }
+
+      return new HttpException(`${e.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    const tokens = await this.jwtTokenService.signTokens(
-      user.id,
-      user.username,
-    );
-
-    await this.jwtTokenService.updateRefreshTokenHash(user.id, tokens.refreshToken);
-
-    return tokens;
   }
 
   public async logout(userId: number): Promise<void> {

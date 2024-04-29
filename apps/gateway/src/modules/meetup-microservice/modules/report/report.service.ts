@@ -7,11 +7,11 @@ import { lastValueFrom } from 'rxjs';
 export class ReportService {
   constructor(@Inject('MEETUP') private meetupClient: ClientProxy) {}
 
-  public async reportCSV() {
+  public async reportCSV(): Promise<string> {
     return await lastValueFrom(this.meetupClient.send(RmqMessages.REPORT_CSV, {}));
   }
 
-  public async reportPDF() {
+  public async reportPDF(): Promise<Buffer> {
     return await lastValueFrom(this.meetupClient.send(RmqMessages.REPORT_PDF, {}));
   }
 

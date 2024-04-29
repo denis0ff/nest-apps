@@ -35,6 +35,19 @@ services:
       - '9200:9200'
       - '9300:9300'
 
+  kibana:
+    mem_limit: 256m
+    image: kibana:7.17.9
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - '5601:5601'
+
   rabbitmq:
     networks:
       - meetup_network
@@ -70,6 +83,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      - ./uploads:/usr/src/app/uploads
     command: npm run start:dev gateway && npx prisma migrate dev && npx prisma db seed
 
   auth:
@@ -107,12 +121,14 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      # - ./uploads:/usr/src/app/uploads
     command: npm run start:dev meetup-microservice && npx prisma migrate dev
 
 volumes:
   postgres:
   rabbitmq_data:
   es_data:
+  kibana_data:
 
 
 networks:

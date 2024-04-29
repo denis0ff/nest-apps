@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateMeetupDto, GetMeetupDto, UpdateMeetupDto } from './dto';
 import { Prisma } from '@prisma/client';
 import { MeetupResponse } from './response';
@@ -8,10 +8,15 @@ import { UserResponse } from 'apps/auth-microservice/src/modules/user/response';
 
 @Injectable()
 export class MeetupRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
+  ) {}
+
+  SERVICE: string = MeetupRepository.name;
 
   // TO DO исправить типизацию
-  public async getMeetupById(id: any): Promise<MeetupResponse> {
+  public async getMeetupById(id: number): Promise<MeetupResponse> {
     return this.prisma.meetup.findUnique({ where: { id: id } });
   }
 
@@ -20,76 +25,111 @@ export class MeetupRepository {
   }
 
   public async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
-    const where: Prisma.MeetupWhereInput = {
-      title: { contains: dto?.title },
-      date: {
-        gte: dto.from ? new Date(dto.from) : undefined,
-        lte: dto.to ? new Date(dto.to) : undefined,
-      },
-    };
+    try {
+      const where: Prisma.MeetupWhereInput = {
+        title: { contains: dto?.title },
+        date: {
+          gte: dto.from ? new Date(dto.from) : undefined,
+          lte: dto.to ? new Date(dto.to) : undefined,
+        },
+      };
 
-    const query: Prisma.MeetupFindManyArgs = {
-      where,
-      orderBy: {
-        date: dto.sort,
-      },
-      take: dto?.limit || 10,
-      skip: (dto?.page - 1) * dto?.limit || undefined,
-    };
+      const query: Prisma.MeetupFindManyArgs = {
+        where,
+        orderBy: {
+          date: dto.sort,
+        },
+        take: +dto?.limit || undefined,
+        skip: (dto?.page - 1) * dto?.limit || undefined,
+      };
 
-    return this.prisma.meetup.findMany(query);
+      return this.prisma.meetup.findMany(query);
+    } catch (e) {
+      this.logger.error('Unable to get meetup list', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async getMeetupByGeo(
     dto: GetMeetupByGeoDto,
   ): Promise<MeetupResponse[]> {
-    const meetups = await this.prisma.meetup.findMany({
-      where: {
-        AND: {
-          long: {
-            gte: dto.long - 0.1,
-            lte: dto.long + 0.1,
-          },
-          lat: {
-            gte: dto.lat - 0.1,
-            lte: dto.lat + 0.1,
+    try {
+      const meetups = await this.prisma.meetup.findMany({
+        where: {
+          AND: {
+            long: {
+              gte: dto.long - 0.1,
+              lte: dto.long + 0.1,
+            },
+            lat: {
+              gte: dto.lat - 0.1,
+              lte: dto.lat + 0.1,
+            },
           },
         },
-      },
-    });
+      });
 
-    return meetups;
+      return meetups;
+    } catch (e) {
+      this.logger.error('Unable to get meetup by geoposition', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async createMeetup(
     userId: number,
     dto: CreateMeetupDto,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetup.create({
-      data: { ...dto, ownerId: userId },
-    });
+    try {
+      return this.prisma.meetup.create({
+        data: { ...dto, ownerId: userId },
+      });
+    } catch (e) {
+      this.logger.error('Unable to create meetup', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async deleteMeetup(id: number): Promise<MeetupResponse> {
-    return this.prisma.meetup.delete({ where: { id: id } });
+    try {
+      return this.prisma.meetup.delete({ where: { id: id } });
+    } catch (e) {
+      this.logger.error('Unable to remove meetup', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async updateMeetup(
     id: number,
     dto: UpdateMeetupDto,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetup.update({ where: { id: id }, data: dto });
+    try {
+      return this.prisma.meetup.update({ where: { id: id }, data: dto });
+    } catch (e) {
+      this.logger.error('Unable to update meetup', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async getUserRole(userId: number): Promise<UserResponse> {
-    return this.prisma.users.findUnique({
-      where: { id: userId },
-    });
+    try {
+      return this.prisma.user.findUnique({
+        where: { id: userId },
+      });
+    } catch (e) {
+      this.logger.error('Unable to get user role', e, this.SERVICE);
+      throw e;
+    }
   }
 
   public async getMeetupOwnerId(ownerId: number): Promise<MeetupResponse> {
-    return this.prisma.meetup.findUnique({
-      where: { id: ownerId },
-    });
+    try {
+      return this.prisma.meetup.findUnique({
+        where: { id: ownerId },
+      });
+    } catch (e) {
+      this.logger.error('Unable to get meetup by ownerId', e, this.SERVICE);
+      throw e;
+    }
   }
 }

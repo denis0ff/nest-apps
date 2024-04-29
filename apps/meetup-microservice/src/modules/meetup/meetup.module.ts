@@ -11,6 +11,7 @@ import { ElasticMicroserviceService } from '../elastic/elastic.service';
 import { UserMicroserviceModule } from 'apps/auth-microservice/src/modules/user/user.module';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
 import { AuthMicroserviceModule } from 'apps/auth-microservice/src/modules/auth/auth.module';
+import { Logger } from 'winston';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { AuthMicroserviceModule } from 'apps/auth-microservice/src/modules/auth/
       provide: APP_GUARD,
       useClass: AccessJWTGuard,
     },
+    Logger,
   ],
+  exports: [Logger],
 })
-export class MeetupModule {}
+export class MeetupMicroserviceModule {}

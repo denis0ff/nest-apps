@@ -27,7 +27,7 @@ export class MeetupController {
   @MessagePattern(RmqMessages.GET_MEETUP_BY_ID)
   public async getMeetupById(
     @Payload('id') id: number,
-  ): Promise<MeetupResponse | string> {
+  ) {
     return this.meetupService.getMeetupById(id);
   }
 
@@ -35,7 +35,7 @@ export class MeetupController {
   public async createMeetup(
     @Payload('userId') userId: number,
     @Payload('dto') dto: CreateMeetupDto,
-  ): Promise<MeetupResponse | string> {
+  ) {
     return this.meetupService.createMeetup(userId, dto);
   }
 
@@ -44,7 +44,7 @@ export class MeetupController {
     @Payload('userId') userId: number,
     @Payload('id') id: number,
     @Payload('dto') dto: UpdateMeetupDto,
-  ): Promise<MeetupResponse | string> {
+  ) {
     return this.meetupService.updateMeetup(userId, id, dto);
   }
 
@@ -52,7 +52,7 @@ export class MeetupController {
   public async deleteMeetup(
     @Payload('userId') userId: number,
     @Payload('id') id: number,
-  ): Promise<MeetupResponse | string> {
+  ) {
     return this.meetupService.deleteMeetup(userId, id);
   }
 }

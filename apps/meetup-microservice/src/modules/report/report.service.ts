@@ -102,8 +102,6 @@ export class ReportService {
     const pdfBytes = await pdfDoc.save();
     const buffer = Buffer.from(pdfBytes);
 
-    const fileName = `meetups.pdf`;
-
-    return { buffer, fileName };
+    return buffer;
   }
 }

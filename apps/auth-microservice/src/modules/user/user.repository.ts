@@ -7,7 +7,7 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async getUserMeetups(id: number) {
-    return this.prisma.users.findUnique({
+    return this.prisma.user.findUnique({
       where: { id },
       include: { followedMeetups: true, createdMeetups: true },
     });
@@ -18,7 +18,7 @@ export class UserRepository {
     meetupId: number,
   ): Promise<MeetupResponse> {
     try {
-      await this.prisma.users.update({
+      await this.prisma.user.update({
         where: { id: userId },
         data: {
           followedMeetups: { connect: { id: meetupId } },

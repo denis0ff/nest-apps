@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
 import { AuthGatewayModule } from './modules/auth-microservice/modules/auth/auth.module';
+import { UploadGatewayModule } from './modules/auth-microservice/modules/upload/upload.module';
 import { UserGatewayModule } from './modules/auth-microservice/modules/user/user.module';
 import { ElasticGatewayModule } from './modules/meetup-microservice/modules/elastic/elastic.module';
 import { MeetupGatewayModule } from './modules/meetup-microservice/modules/meetup/meetup.module';
@@ -20,6 +21,7 @@ import { ReportGatewayModule } from './modules/meetup-microservice/modules/repor
     UserGatewayModule,
     ReportGatewayModule,
     ElasticGatewayModule,
+    UploadGatewayModule
   ],
   providers: [
     AccessJWTGuard,

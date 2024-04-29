@@ -30,12 +30,11 @@ export class GetMeetupDto {
     description: 'Count of results',
     required: false,
     minimum: 1,
-    default: 10,
   })
   @Type(() => Number)
   @IsOptional()
   @IsNumber()
-  limit?: number = 10;
+  limit?: number;
 
   @ApiProperty({ description: 'Page number', required: false })
   @Type(() => Number)

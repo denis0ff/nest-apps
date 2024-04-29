@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Header,
+  HttpStatus,
   Param,
   ParseFloatPipe,
   ParseIntPipe,
@@ -69,10 +70,17 @@ export class MeetupController {
   @ApiOperation({ summary: 'Create new meetup' })
   @ApiMeetup()
   @ApiResponse({
-    status: 403,
+    status: HttpStatus.FORBIDDEN,
     description: 'Access denied',
     schema: {
       $ref: getSchemaPath(AccessDenied),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Meetup successfully created',
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
     },
   })
   public async createMeetup(
@@ -87,7 +95,7 @@ export class MeetupController {
   @ApiOperation({ summary: 'Update meetup' })
   @ApiMeetup()
   @ApiResponse({
-    status: 403,
+    status: HttpStatus.FORBIDDEN,
     description: 'Access denied',
     type: AccessDenied,
     schema: {
@@ -107,7 +115,7 @@ export class MeetupController {
   @ApiOperation({ summary: 'Delete meetup' })
   @ApiMeetup()
   @ApiResponse({
-    status: 403,
+    status: HttpStatus.FORBIDDEN,
     description: 'Access denied',
     schema: {
       $ref: getSchemaPath(AccessDenied),

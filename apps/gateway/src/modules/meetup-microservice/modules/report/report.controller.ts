@@ -1,4 +1,4 @@
-import { Controller, Get, Header, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Header, HttpStatus, Res } from '@nestjs/common';
 import { ReportService } from './report.service';
 import {
   ApiBearerAuth,
@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiTags('Report API')
 @Controller('report')
@@ -31,7 +32,9 @@ export class ReportController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-  public async reportPDF() {
-    return this.reportService.reportPDF();
+  public async reportPDF(@Res() res: Response) {
+    const pdfBytes = await this.reportService.reportPDF();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(pdfBytes);
   }
 }
