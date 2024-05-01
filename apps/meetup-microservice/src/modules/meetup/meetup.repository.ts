@@ -20,10 +20,6 @@ export class MeetupRepository {
     return this.prisma.meetup.findUnique({ where: { id: id } });
   }
 
-  public async getAllMeetupsReport(): Promise<MeetupResponse[]> {
-    return this.prisma.meetup.findMany();
-  }
-
   public async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
     try {
       const where: Prisma.MeetupWhereInput = {

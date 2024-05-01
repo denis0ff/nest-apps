@@ -1,8 +1,10 @@
 import { appConfig } from '@app/common';
+import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
+import { redisStore } from 'cache-manager-redis-yet';
 import { AuthGatewayModule } from './modules/auth-microservice/modules/auth/auth.module';
 import { UploadGatewayModule } from './modules/auth-microservice/modules/upload/upload.module';
 import { UserGatewayModule } from './modules/auth-microservice/modules/user/user.module';
@@ -16,12 +18,25 @@ import { ReportGatewayModule } from './modules/meetup-microservice/modules/repor
       load: [appConfig],
       isGlobal: true,
     }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        isGlobal: true,
+        store: redisStore,
+        url: configService.get('REDIS_URL'),
+        // host: configService.get('REDIS_HOST'),
+        // port: configService.get('REDIS_PORT'),
+        ttl: 600,
+        max: 15,
+      }),
+      inject: [ConfigService],
+    }),
     MeetupGatewayModule,
     AuthGatewayModule,
     UserGatewayModule,
     ReportGatewayModule,
     ElasticGatewayModule,
-    UploadGatewayModule
+    UploadGatewayModule,
   ],
   providers: [
     AccessJWTGuard,

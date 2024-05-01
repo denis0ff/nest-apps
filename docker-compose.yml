@@ -3,13 +3,13 @@ services:
     networks:
       - meetup_network
     mem_limit: 256m
-    cpus: 0.05
+    cpus: 10
     image: postgres:15
     restart: always
     env_file:
       - .env
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -52,7 +52,7 @@ services:
     networks:
       - meetup_network
     mem_limit: 256m
-    cpus: 0.05
+    cpus: 10
     image: rabbitmq:3-management
     ports:
       - "5672:5672" # порт для AMQP
@@ -67,7 +67,7 @@ services:
     networks:
       - meetup_network
     mem_limit: 256m
-    cpus: 0.1
+    cpus: 10
     build:
       context: ./
       dockerfile: ./apps/gateway/Dockerfile
@@ -80,6 +80,9 @@ services:
       - meetup
       - postgres
       - rabbitmq
+      - redis
+    links:
+      - redis
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -109,7 +112,7 @@ services:
     networks:
       - meetup_network
     mem_limit: 256m
-    cpus: 0.05
+    cpus: 10
     build:
       context: ./
       dockerfile: ./apps/meetup-microservice/Dockerfile
@@ -124,12 +127,22 @@ services:
       # - ./uploads:/usr/src/app/uploads
     command: npm run start:dev meetup-microservice && npx prisma migrate dev
 
+  redis:
+    mem_limit: 256m
+    cpus: 5
+    image: redis
+    networks:
+      - meetup_network
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/var/lib/redis
 volumes:
-  postgres:
+  postgres_data:
   rabbitmq_data:
   es_data:
   kibana_data:
-
+  redis_data:
 
 networks:
   meetup_network:

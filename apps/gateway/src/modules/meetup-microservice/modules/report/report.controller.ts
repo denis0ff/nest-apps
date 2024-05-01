@@ -1,4 +1,11 @@
-import { Controller, Get, Header, HttpStatus, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Header,
+  HttpStatus,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { ReportService } from './report.service';
 import {
   ApiBearerAuth,
@@ -7,6 +14,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
+import { writeFile } from 'fs/promises';
+import { GetMeetupDto } from './dto';
 
 @ApiTags('Report API')
 @Controller('report')
@@ -20,8 +29,8 @@ export class ReportController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-  public async reportCSV() {
-    return this.reportService.reportCSV();
+  public async reportCSV(@Query() dto: GetMeetupDto) {
+    return this.reportService.reportCSV(dto);
   }
 
   @Get('pdf')
@@ -32,9 +41,10 @@ export class ReportController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-  public async reportPDF(@Res() res: Response) {
-    const pdfBytes = await this.reportService.reportPDF();
-    res.setHeader('Content-Type', 'application/pdf');
-    res.send(pdfBytes);
+  public async reportPDF(@Query() dto: GetMeetupDto, @Res() res: Response) {
+    const pdfBytes = await this.reportService.reportPDF(dto);
+
+    await writeFile('./meetups.pdf', Buffer.from(pdfBytes));
+    res.download('./meetups.pdf');
   }
 }

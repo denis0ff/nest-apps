@@ -25,6 +25,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
 
 @ApiTags('Meetup API')
@@ -36,6 +37,8 @@ export class MeetupController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all meetups' })
   @ApiMeetup()
+  @CacheKey('meetups_all')
+  @CacheTTL(300)
   public async getAllMeetups(
     @Query() dto: GetMeetupDto,
   ): Promise<MeetupResponse | string> {
@@ -46,6 +49,7 @@ export class MeetupController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get meetups by geolocation' })
   @ApiMeetup()
+  @CacheKey('meetups_pos')
   public async getMeetupByGeo(
     @Query('long', ParseFloatPipe) long: number,
     @Query('lat', ParseFloatPipe) lat: number,
@@ -58,6 +62,7 @@ export class MeetupController {
   @ApiExtraModels(MeetupResponse)
   @ApiOperation({ summary: 'Get meetup by id' })
   @ApiMeetup()
+  @CacheKey('meetup_id')
   public async getMeetupById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<MeetupResponse | string> {

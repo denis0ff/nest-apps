@@ -1,4 +1,5 @@
 import { BadRequestError, UnauthorizedError } from '@app/common/swagger';
+import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import {
   Controller,
   Get,
@@ -48,6 +49,8 @@ export class UserController {
       $ref: getSchemaPath(UnauthorizedError),
     },
   })
+  @CacheKey('user_info')
+  @CacheTTL(300)
   getUserInfo(@GetUserId(ParseIntPipe) userId: number): Promise<UserResponse> {
     return this.usersService.getUserInfo(userId);
   }

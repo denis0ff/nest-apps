@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { MeetupRepository } from '../meetup/meetup.repository';
 import { unparse } from 'papaparse';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { GetMeetupDto } from './dto';
 
 @Injectable()
 export class ReportService {
   constructor(private readonly meetupRepository: MeetupRepository) {}
 
-  public async reportCSV() {
-    const meetups = await this.meetupRepository.getAllMeetupsReport();
+  public async reportCSV(dto: GetMeetupDto) {
+    const meetups = await this.meetupRepository.getAllMeetups(dto);
 
     const data = meetups.map(
       ({ title, description, lat, long, place, tags }) => [
@@ -24,8 +25,8 @@ export class ReportService {
     });
   }
 
-  public async reportPDF() {
-    const meetups = await this.meetupRepository.getAllMeetupsReport();
+  public async reportPDF(dto: GetMeetupDto) {
+    const meetups = await this.meetupRepository.getAllMeetups(dto);
 
     const pdfDoc = await PDFDocument.create();
 
