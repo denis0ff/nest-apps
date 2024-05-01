@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { appConfig, RmqModule } from '@app/common';
 import { UserMicroserviceModule } from '../user/user.module';
 import { AccessJWTStrategy, RefreshJWTStrategy } from './strategies';
+import { UploadMicroserviceModule } from '../upload/upload.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AccessJWTStrategy, RefreshJWTStrategy } from './strategies';
     }),
     RmqModule,
     UserMicroserviceModule,
+    UploadMicroserviceModule,
   ],
   controllers: [AuthController],
   providers: [

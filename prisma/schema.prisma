@@ -11,8 +11,8 @@ datasource db {
 }
 
 model Meetup {
-  id              Int       @id @unique @default(autoincrement())
-  title           String    @unique
+  id              Int      @id @unique @default(autoincrement())
+  title           String   @unique
   description     String
   date            DateTime
   place           String
@@ -32,6 +32,7 @@ model User {
   hashedRefreshToken String?
   createdMeetups     Meetup[] @relation("MeetupOrganizer")
   followedMeetups    Meetup[] @relation("MeetupFollower")
+  image              Bytes?
 }
 
 enum UserRole {

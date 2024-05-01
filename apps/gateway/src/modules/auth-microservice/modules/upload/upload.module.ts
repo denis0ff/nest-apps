@@ -1,24 +1,11 @@
+import { RmqModule } from '@app/common';
 import { Module } from '@nestjs/common';
-import { UploadGatewayController } from './upload.controller';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { UploadController } from './upload.controller';
+import { UploadService } from './upload.service';
 
 @Module({
-  imports: [
-    MulterModule.register({
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const fileName = req.user;
-          console.log(fileName);
-
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `${file.fieldname}-${uniqueSuffix}`);
-        },
-      }),
-    }),
-  ],
-  controllers: [UploadGatewayController],
+  imports: [RmqModule.register({ serviceName: 'AUTH' })],
+  controllers: [UploadController],
+  providers: [UploadService],
 })
 export class UploadGatewayModule {}

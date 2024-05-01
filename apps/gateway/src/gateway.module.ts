@@ -3,6 +3,7 @@ import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AuthGatewayModule } from './modules/auth-microservice/modules/auth/auth.module';
@@ -31,6 +32,12 @@ import { ReportGatewayModule } from './modules/meetup-microservice/modules/repor
       }),
       inject: [ConfigService],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
     MeetupGatewayModule,
     AuthGatewayModule,
     UserGatewayModule,
@@ -43,6 +50,10 @@ import { ReportGatewayModule } from './modules/meetup-microservice/modules/repor
     {
       provide: APP_GUARD,
       useClass: AccessJWTGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

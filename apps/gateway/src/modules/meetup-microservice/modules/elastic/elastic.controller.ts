@@ -1,8 +1,10 @@
 import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { SkipThrottle } from '@nestjs/throttler';
 import { ElasticGatewayService } from './elastic.service';
 
+@SkipThrottle()
 @ApiTags('Elastic API')
 @Controller('elastic')
 export class ElasticGatewayController {

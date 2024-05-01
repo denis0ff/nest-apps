@@ -16,7 +16,9 @@ import {
 import { Response } from 'express';
 import { writeFile } from 'fs/promises';
 import { GetMeetupDto } from './dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @ApiTags('Report API')
 @Controller('report')
 export class ReportController {
