@@ -17,7 +17,10 @@ export class ElasticMicroserviceService {
   }
 
   public async searchMeetups({ searchString }: ElasticDto) {
-    const data = await this.elasticsearchService.search<MeetupSearchPayload, MeetupSearchResult>({
+    const data = await this.elasticsearchService.search<
+      MeetupSearchPayload,
+      MeetupSearchResult
+    >({
       index: this.index,
       body: {
         query: {
@@ -30,8 +33,8 @@ export class ElasticMicroserviceService {
     });
 
     return {
-        total: data.hits.hits.length,
-        hits: data.hits.hits.map(({ _source }) => (_source)),
+      total: data.hits.hits.length,
+      hits: data.hits.hits.map(({ _source }) => _source),
     };
   }
 }

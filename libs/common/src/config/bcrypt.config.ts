@@ -1,1 +1,1 @@
-export const bcryptSalt = 1E9;
+export const bcryptSalt = 1e9;

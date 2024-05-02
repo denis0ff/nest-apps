@@ -9,15 +9,21 @@ export class AuthService {
   constructor(@Inject('AUTH') private authClient: ClientProxy) {}
 
   public async register(dto: AuthDto) {
-    return await lastValueFrom(this.authClient.send(RmqMessages.CREATE_USER, { dto }));
+    return await lastValueFrom(
+      this.authClient.send(RmqMessages.CREATE_USER, { dto }),
+    );
   }
 
   public async login(dto: AuthDto) {
-    return await lastValueFrom(this.authClient.send(RmqMessages.LOGIN_USER, { dto }));
+    return await lastValueFrom(
+      this.authClient.send(RmqMessages.LOGIN_USER, { dto }),
+    );
   }
 
   public async logout(userId: number) {
-    return await lastValueFrom(this.authClient.send(RmqMessages.LOGOUT_USER, { userId }));
+    return await lastValueFrom(
+      this.authClient.send(RmqMessages.LOGOUT_USER, { userId }),
+    );
   }
 
   public async refreshTokens(userId: number, refreshToken: string) {
@@ -27,6 +33,8 @@ export class AuthService {
   }
 
   public async validateUser(username: string) {
-    return await lastValueFrom(this.authClient.send(RmqMessages.VALIDATE_USER, { username }));
+    return await lastValueFrom(
+      this.authClient.send(RmqMessages.VALIDATE_USER, { username }),
+    );
   }
 }

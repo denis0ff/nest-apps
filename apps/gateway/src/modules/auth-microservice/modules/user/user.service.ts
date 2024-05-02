@@ -10,7 +10,9 @@ export class UserService {
   constructor(@Inject('AUTH') private authClient: ClientProxy) {}
 
   public async getUserInfo(id: number): Promise<UserResponse> {
-    return await lastValueFrom(this.authClient.send(RmqMessages.GET_USER_BY_ID, { id }));
+    return await lastValueFrom(
+      this.authClient.send(RmqMessages.GET_USER_BY_ID, { id }),
+    );
   }
 
   public async subscribeToMeetup(
@@ -18,7 +20,10 @@ export class UserService {
     meetupId: number,
   ): Promise<MeetupResponse> {
     return await lastValueFrom(
-      this.authClient.send(RmqMessages.SUBSCRIBE_TO_MEETUP, { userId, meetupId }),
+      this.authClient.send(RmqMessages.SUBSCRIBE_TO_MEETUP, {
+        userId,
+        meetupId,
+      }),
     );
   }
 }

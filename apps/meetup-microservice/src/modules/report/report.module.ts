@@ -8,5 +8,4 @@ import { MeetupRepository } from '../meetup/meetup.repository';
   controllers: [ReportController],
   providers: [ReportService, MeetupRepository, Logger],
 })
-
 export class ReportMicroserviceModule {}

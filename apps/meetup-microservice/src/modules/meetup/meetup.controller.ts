@@ -25,9 +25,7 @@ export class MeetupController {
   }
 
   @MessagePattern(RmqMessages.GET_MEETUP_BY_ID)
-  public async getMeetupById(
-    @Payload('id') id: number,
-  ) {
+  public async getMeetupById(@Payload('id') id: number) {
     return this.meetupService.getMeetupById(id);
   }
 

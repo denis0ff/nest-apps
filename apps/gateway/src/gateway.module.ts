@@ -1,8 +1,8 @@
 import { appConfig } from '@app/common';
-import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AccessJWTGuard } from 'apps/auth-microservice/src/modules/auth/guards';
 import { redisStore } from 'cache-manager-redis-yet';
@@ -25,8 +25,6 @@ import { ReportGatewayModule } from './modules/meetup-microservice/modules/repor
         isGlobal: true,
         store: redisStore,
         url: configService.get('REDIS_URL'),
-        // host: configService.get('REDIS_HOST'),
-        // port: configService.get('REDIS_PORT'),
         ttl: 600,
         max: 15,
       }),

@@ -60,7 +60,10 @@ export class AuthService {
         return e;
       }
 
-      return new HttpException(`${e.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new HttpException(
+        `${e.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -118,7 +121,10 @@ export class AuthService {
         return e;
       }
 
-      return new HttpException(`${e.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new HttpException(
+        `${e.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

@@ -6,10 +6,15 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
 @Injectable()
-export class RefreshJWTStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+export class RefreshJWTStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([RefreshJWTStrategy.extractJWT]),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        RefreshJWTStrategy.extractJWT,
+      ]),
       secretOrKey: process.env.REFRESH_JWT_SECRET,
       passReqToCallback: true,
     });

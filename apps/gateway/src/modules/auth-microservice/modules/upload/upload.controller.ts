@@ -3,7 +3,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Inject,
   ParseFilePipeBuilder,
   Post,
   UploadedFile,
@@ -36,7 +35,7 @@ export class UploadController {
   })
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes("multipart/form-data")
+  @ApiConsumes('multipart/form-data')
   public async uploadImage(
     @Body() dto: UploadImageDto,
     @GetUserId() userId: number,

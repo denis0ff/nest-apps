@@ -5,12 +5,15 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
+import {
+  CreateMeetupDto,
+  UpdateMeetupDto,
+  GetMeetupDto,
+  GetMeetupByGeoDto,
+} from './dto';
 import { MeetupResponse } from './response';
 import { MeetupRepository } from './meetup.repository';
 import { ElasticMicroserviceService } from '../elastic/elastic.service';
-import { GetMeetupByGeoDto } from './dto/get-meetup-by-geo.dto';
-import { ElasticDto } from '../elastic/dto';
 
 @Injectable()
 export class MeetupService {

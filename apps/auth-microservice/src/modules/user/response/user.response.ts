@@ -1,4 +1,4 @@
-import { MeetupResponse } from "apps/meetup-microservice/src/modules/meetup/response";
+import { MeetupResponse } from 'apps/meetup-microservice/src/modules/meetup/response';
 
 export class UserResponse {
   id: number;

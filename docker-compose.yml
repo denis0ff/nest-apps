@@ -137,12 +137,28 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/var/lib/redis
+
+  grafana:
+    networks:
+      - meetup_network
+    depends_on:
+      - postgres
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+    container_name: grafana
+    ports:
+      - 9000:9000
+    volumes:
+      - grafana_data:/var/lib/grafana
+
 volumes:
   postgres_data:
   rabbitmq_data:
   es_data:
   kibana_data:
   redis_data:
+  grafana_data:
 
 networks:
   meetup_network:

@@ -18,5 +18,5 @@ export class UserResponse {
   hashedRefreshToken: string;
   followedMeetups?: MeetupResponse[];
   createdMeetups?: MeetupResponse[];
-  image: Buffer
+  image: Buffer;
 }

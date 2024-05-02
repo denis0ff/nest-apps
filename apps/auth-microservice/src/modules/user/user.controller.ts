@@ -10,7 +10,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @MessagePattern(RmqMessages.GET_USER_BY_ID)
-  public async getUserMeetups(@Payload('id') id: number): Promise<UserResponse> {
+  public async getUserMeetups(
+    @Payload('id') id: number,
+  ): Promise<UserResponse> {
     return this.userService.getUserMeetups(id);
   }
 

@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Header,
   HttpStatus,
   Param,
   ParseFloatPipe,
@@ -26,7 +25,6 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
-
 
 @ApiTags('Meetup API')
 @Controller('meetup')
